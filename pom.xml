@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>base</artifactId>
+
+  <build>
+    <!-- 打包名称 -->
+    <finalName>${artifactId}</finalName>
+    <plugins>
+      <!--springboot构建jar的插件-->
+      <!-- 作为可执行JAR的包 在生产环境下可以使用(java -jar *.jar) 在项目目录下在cmd 输入mvn package 可以打成可运行的jar -->
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <!--fork : 如果没有该项配置，肯定devtools不会起作用，即应用不会restart -->
+          <!--配置了<fork>true</fork>后在修改java文件后也就支持了热启动，不过这种方式是属于项目重启（速度比较快的项目重启）， 会清空session中的值，也就是如果有用户登陆的话，项目重启后需要重新登陆。-->
+          <!--<fork>true</fork>-->
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+        <version>${spring-boot.version}</version>
+      </plugin>
+
+      <!-- java源码插件 -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <useDefaultDelimiters>true</useDefaultDelimiters>
+        </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+      </plugin>
+      <!-- maven里执行测试用例的插件-->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--跳过测试单元-->
+          <skipTests>true</skipTests>
+        </configuration>
+      </plugin>
+      <!-- java编译插件 -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>
+            <!--将参数名称序列化出来-->
+            <arg>-parameters</arg>
+          </compilerArgs>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <!--springboot单元测试模块 -->
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <!-- apache 工具类-->
+      <dependency>
+        <artifactId>commons-lang3</artifactId>
+        <groupId>org.apache.commons</groupId>
+        <version>${commons-lang3.version}</version>
+      </dependency>
+
+      <!-- apache图片处理-->
+      <dependency>
+        <artifactId>commons-imaging</artifactId>
+        <groupId>org.apache.commons</groupId>
+        <version>${commons-imaging.version}</version>
+      </dependency>
+
+      <!--tinyPNG压缩技术-->
+      <dependency>
+        <artifactId>tinify</artifactId>
+        <groupId>com.tinify</groupId>
+        <version>${tinyfy.version}</version>
+      </dependency>
+      <!--h2嵌入式数据库-->
+      <dependency>
+        <artifactId>h2</artifactId>
+        <groupId>com.h2database</groupId>
+        <scope>runtime</scope>
+        <version>${h2.version}</version>
+      </dependency>
+      <!-- IBM MQ原生客户端-->
+      <dependency>
+        <artifactId>com.ibm.mq.allclient</artifactId>
+        <groupId>com.ibm.mq</groupId>
+        <version>${ibm.mq.version}</version>
+      </dependency>
+
+      <dependency>
+        <artifactId>dom4j</artifactId>
+        <groupId>org.dom4j</groupId>
+        <version>${dom4j.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>jaudiotagger</artifactId>
+        <groupId>org</groupId>
+        <version>${jaudiotagger.version}</version>
+      </dependency>
+
+      <!-- mongoDB -->
+      <dependency>
+        <artifactId>mongo-java-driver</artifactId>
+        <groupId>org.mongodb</groupId>
+        <version>${mongo-java-driver.version}</version>
+      </dependency>
+
+      <!--若使用redisTemplate作为分布式锁底层，则需要引入-->
+      <dependency>
+        <artifactId>lock4j-redis-template-spring-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${lock4j.version}</version>
+      </dependency>
+      <!--若使用redisson作为分布式锁底层，则需要引入-->
+      <!--<dependency>
+        <artifactId>lock4j-redisson-spring-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${lock4j.version}</version>
+      </dependency>-->
+      <!-- zookeeper -->
+      <dependency>
+        <artifactId>zookeeper</artifactId>
+        <groupId>org.apache.zookeeper</groupId>
+        <version>3.8.0</version>
+      </dependency>
+
+      <!--若使用zookeeper作为分布式锁底层，则需要引入-->
+      <dependency>
+        <artifactId>lock4j-zookeeper-spring-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${lock4j.version}</version>
+      </dependency>
+
+      <!-- redisson -->
+      <dependency>
+        <artifactId>redisson</artifactId>
+        <groupId>org.redisson</groupId>
+        <version>${redisson.version}</version>
+      </dependency>
+
+      <!-- redisson集成springboot -->
+      <dependency>
+        <artifactId>redisson-spring-boot-starter</artifactId>
+        <groupId>org.redisson</groupId>
+        <version>${redission.version}</version>
+      </dependency>
+
+      <!--spring-boot依赖-->
+      <dependency>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-boot.version}</version>
+      </dependency>
+
+      <!--spring-cloud微服务架构依赖-->
+      <dependency>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <groupId>org.springframework.cloud</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-cloud.version}</version>
+      </dependency>
+
+      <!--Spring Cloud & Alibaba 相关依赖-->
+      <dependency>
+        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+        <groupId>com.alibaba.cloud</groupId>
+        <scope>import</scope>
+        <type>pom</type>
+        <version>${spring-cloud-alibaba.version}</version>
+      </dependency>
+      <!-- springboot整合openapi -->
+      <dependency>
+        <artifactId>springdoc-openapi-ui</artifactId>
+        <groupId>org.springdoc</groupId>
+        <version>${openapi-ui.version}</version>
+      </dependency>
+
+      <!--smart-docj接口文档生成-->
+      <dependency>
+        <artifactId>smart-doc</artifactId>
+        <groupId>com.github.shalousun</groupId>
+        <scope>test</scope>
+        <version>${smart-doc.version}</version>
+      </dependency>
+
+      <!--jackson-java高性能JSON工具-->
+      <!--核心包-->
+      <dependency>
+        <artifactId>jackson-core</artifactId>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <!--数据绑定包-->
+      <dependency>
+        <artifactId>jackson-databind</artifactId>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <!--注解包-->
+      <dependency>
+        <artifactId>jackson-annotations</artifactId>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <!-- 支持java8 localDate等新时间类型的序列化 -->
+      <dependency>
+        <artifactId>jackson-datatype-jsr310</artifactId>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <!-- xml处理 -->
+      <dependency>
+        <artifactId>jackson-dataformat-xml</artifactId>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- easypoi -->
+      <dependency>
+        <artifactId>easypoi-spring-boot-starter</artifactId>
+        <groupId>cn.afterturn</groupId>
+        <version>${easypoi.version}</version>
+      </dependency>
+
+      <!-- google开发工具guava -->
+      <dependency>
+        <artifactId>guava</artifactId>
+        <groupId>com.google.guava</groupId>
+        <version>${guava.version}</version>
+      </dependency>
+
+      <!-- java原生操作redis-->
+      <dependency>
+        <artifactId>jedis</artifactId>
+        <groupId>redis.clients</groupId>
+        <version>${jedis.version}</version>
+      </dependency>
+
+      <!-- OpenOffice相关依赖-->
+      <dependency>
+        <artifactId>jurt</artifactId>
+        <groupId>org.openoffice</groupId>
+        <version>${openoffice.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>ridl</artifactId>
+        <groupId>org.openoffice</groupId>
+        <version>${openoffice.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>juh</artifactId>
+        <groupId>org.openoffice</groupId>
+        <version>${openoffice.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>unoil</artifactId>
+        <groupId>org.openoffice</groupId>
+        <version>${openoffice.version}</version>
+      </dependency>
+
+      <!-- 阿里的Excel工具 -->
+      <dependency>
+        <artifactId>easyexcel</artifactId>
+        <groupId>com.alibaba</groupId>
+        <version>${easyexcel.version}</version>
+      </dependency>
+
+      <!-- apache的FTP连接工具-->
+      <dependency>
+        <artifactId>commons-net</artifactId>
+        <groupId>commons-net</groupId>
+        <version>${commons-net.version}</version>
+      </dependency>
+
+      <!-- java实现SSH传输-->
+      <dependency>
+        <artifactId>jsch</artifactId>
+        <groupId>com.jcraft</groupId>
+        <version>${jsch.version}</version>
+      </dependency>
+
+      <!-- java实现SSH传输-->
+      <dependency>
+        <artifactId>ganymed-ssh2</artifactId>
+        <groupId>ch.ethz.ganymed</groupId>
+        <version>262</version>
+      </dependency>
+
+
+      <!-- java发送邮件-->
+      <dependency>
+        <artifactId>mail</artifactId>
+        <groupId>javax.mail</groupId>
+        <version>${javax.mail.version}</version>
+      </dependency>
+
+      <!--swagger2在线接口文档生成-->
+      <dependency>
+        <artifactId>springfox-swagger2</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>swagger-annotations</artifactId>
+            <groupId>io.swagger</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>swagger-models</artifactId>
+            <groupId>io.swagger</groupId>
+          </exclusion>
+        </exclusions>
+        <groupId>io.springfox</groupId>
+        <version>${swagger2.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <groupId>io.springfox</groupId>
+        <version>${swagger2.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>swagger-annotations</artifactId>
+        <groupId>io.swagger</groupId>
+        <version>${swagger-annotations.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>swagger-models</artifactId>
+        <groupId>io.swagger</groupId>
+        <version>${swagger-models.version}</version>
+      </dependency>
+      <!-- bootstrap整合swagger2 -->
+      <dependency>
+        <artifactId>swagger-bootstrap-ui</artifactId>
+        <groupId>com.github.xiaoymin</groupId>
+        <version>${swagger-bootstrap-ui.version}</version>
+      </dependency>
+
+
+      <!-- sql打印日志-->
+      <dependency>
+        <artifactId>p6spy</artifactId>
+        <groupId>p6spy</groupId>
+        <version>${p6spy.version}</version>
+      </dependency>
+
+      <!--JAVA汉字拼音操作库-TinyPinyin-->
+      <dependency>
+        <artifactId>TinyPinyin</artifactId>
+        <groupId>io.github.biezhi</groupId>
+        <version>${TinyPinyin.version}</version>
+      </dependency>
+
+      <!--JAVA汉字拼音操作库-pinyin4j-->
+      <dependency>
+        <artifactId>pinyin4j</artifactId>
+        <groupId>com.belerweb</groupId>
+        <version>${pinyin4j.version}</version>
+      </dependency>
+
+      <!--一款Java 的HTML解析器-->
+      <dependency>
+        <artifactId>jsoup</artifactId>
+        <groupId>org.jsoup</groupId>
+        <version>${jsoup.version}</version>
+      </dependency>
+
+      <!--java生成与解析二维码-->
+      <dependency>
+        <artifactId>core</artifactId>
+        <groupId>com.google.zxing</groupId>
+        <version>${google.zxing.version}</version>
+      </dependency>
+
+      <!--java操作pdf-->
+      <dependency>
+        <artifactId>itextpdf</artifactId>
+        <groupId>com.itextpdf</groupId>
+        <version>${itextpdf.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>itext-asian</artifactId>
+        <groupId>com.itextpdf</groupId>
+        <version>${itext-asian.version}</version>
+      </dependency>
+
+      <!--hutool工具包-->
+      <dependency>
+        <artifactId>hutool-all</artifactId>
+        <groupId>cn.hutool</groupId>
+        <version>${hutool.version}</version>
+      </dependency>
+
+      <!-- MYSQL -->
+      <dependency>
+        <artifactId>mysql-connector-java</artifactId>
+        <groupId>mysql</groupId>
+        <version>${mysql.version}</version>
+      </dependency>
+
+      <!-- mybatis-plus整合springboot -->
+      <dependency>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+      <!--mybatis-plus代码生成器-->
+      <dependency>
+        <artifactId>mybatis-plus-generator</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${mybatis-plus-generator.version}</version>
+      </dependency>
+      <!--一个基于springboot的快速集成多数据源的启动器-->
+      <dependency>
+        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        <groupId>com.baomidou</groupId>
+        <version>${dynamic-datasource.version}</version>
+      </dependency>
+
+
+      <!-- fastjson -->
+      <dependency>
+        <artifactId>fastjson</artifactId>
+        <groupId>com.alibaba</groupId>
+        <version>${fastjson.version}</version>
+      </dependency>
+
+      <!-- druid连接池 -->
+      <dependency>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>jconsole</artifactId>
+            <groupId>com.sun</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>tools</artifactId>
+            <groupId>com.sun</groupId>
+          </exclusion>
+        </exclusions>
+        <groupId>com.alibaba</groupId>
+        <version>${druid.version}</version>
+      </dependency>
+
+      <!-- java读写Excel，引入poi，解析workbook视图 -->
+      <dependency>
+        <artifactId>poi</artifactId>
+        <groupId>org.apache.poi</groupId>
+        <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>poi-scratchpad</artifactId>
+        <groupId>org.apache.poi</groupId>
+        <version>${poi.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>ooxml-schemas</artifactId>
+        <groupId>org.apache.poi</groupId>
+        <version>${ooxml-schemas.version}</version>
+      </dependency>
+      <dependency>
+        <artifactId>poi-ooxml-schemas</artifactId>
+        <groupId>org.apache.poi</groupId>
+        <version>${poi.version}</version>
+      </dependency>
+
+      <!-- 以下是POI相关使用 注：版本号不可轻易更改 -->
+      <dependency>
+        <artifactId>poi-ooxml</artifactId>
+        <groupId>org.apache.poi</groupId>
+        <version>${poi.version}</version>
+      </dependency>
+
+      <dependency>
+        <artifactId>xercesImpl</artifactId>
+        <groupId>xerces</groupId>
+        <version>${xercesImpl.version}</version>
+      </dependency>
+
+      <!--压缩和加压文件工具类-->
+      <dependency>
+        <artifactId>commons-compress</artifactId>
+        <groupId>org.apache.commons</groupId>
+        <version>${commons-compress.version}</version>
+      </dependency>
+
+      <!--java读取图片的(尺寸、拍摄日期、标记)等EXIF信息-->
+      <dependency>
+        <artifactId>metadata-extractor</artifactId>
+        <groupId>com.drewnoakes</groupId>
+        <version>${metadata-extractor.version}</version>
+      </dependency>
+
+      <!-- apache的bean工具类 -->
+      <dependency>
+        <artifactId>commons-beanutils</artifactId>
+        <groupId>commons-beanutils</groupId>
+        <version>${commons-beanutils.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+  <description>${artifactId}</description>
+  <groupId>com.joeylee</groupId>
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>${artifactId}</name>
+
+  <packaging>pom</packaging>
+
+
+  <!--子模块不继承dependencyManagement的依赖-->
+  <pluginRepositories>
+    <pluginRepository>
+      <id>public</id>
+      <name>Nuxeo virtual release repository</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://maven.nuxeo.org/nexus/content/groups/public</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>public-snapshot</id>
+      <name>Nuxeo virtual snapshot repository</name>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <url>
+        http://maven.nuxeo.org/nexus/content/groups/public-snapshot
+      </url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>public2</id>
+      <name>aliyun nexus</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <properties>
+    <TinyPinyin.version>2.0.3.RELEASE</TinyPinyin.version>
+    <!-- 文件拷贝时的编码 -->
+    <aspectjweaver.version>1.9.9.1</aspectjweaver.version>
+    <axis2.version>1.7.9</axis2.version>
+    <!-- 编译时的编码 -->
+    <codingapi.txlcn.version>5.0.2.RELEASE</codingapi.txlcn.version>
+    <commons-beanutils.version>1.9.4</commons-beanutils.version>
+    <commons-compress.version>1.18</commons-compress.version>
+    <!-- spring-boot版本-->
+    <commons-imaging.version>1.0-alpha3</commons-imaging.version>
+    <!-- spring-cloud版本-->
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-net.version>3.6</commons-net.version><!--Mybatis增强版-->
+    <cos_api.version>5.6.8</cos_api.version><!--Mybatis增强版-->
+    <cxf.version>3.4.2</cxf.version><!--多数据源-->
+    <docx4j.version>6.1.2</docx4j.version><!--分布式锁-->
+    <dom4j.version>2.1.3</dom4j.version><!--腾讯云api-->
+    <druid.version>1.2.15</druid.version><!--mysql-->
+    <dtmcli-java.version>2.1.5</dtmcli-java.version><!--jackson-java高性能JSON工具-->
+    <dynamic-datasource.version>3.5.2</dynamic-datasource.version><!--java原生操作redis-->
+    <easyexcel.version>3.1.1</easyexcel.version><!--hutool工具-->
+    <easymock.version>3.2</easymock.version><!--redissio n-->
+    <easypoi.version>4.2.0</easypoi.version>
+    <elastic-job.version>2.1.5</elastic-job.version><!--分布式搜索工具-->
+    <elasticsearch6.version>6.2.3</elasticsearch6.version><!--分布式搜索工具-->
+    <elasticsearch7.version>7.8.0</elasticsearch7.version><!--阿里分布式文件工具-->
+    <fastdfs.version>1.26.7</fastdfs.version><!--阿里Excel工具-->
+    <fastjson.version>1.2.73</fastjson.version><!--阿里数据库连接池工具-->
+    <google.zxing.version>3.4.0</google.zxing.version><!--分布式定时任务中间件-->
+    <groupdocs-metadata.version>22.2</groupdocs-metadata.version><!--分布式定时任务中间件-->
+    <guava.version>31.1-jre</guava.version><!--easypoi-->
+    <h2.version>2.1.214</h2.version><!--阿里nacos整合springcloud-->
+    <httpclient.version>4.5.13</httpclient.version><!--阿里nacos客户端-->
+    <hutool.version>5.8.10</hutool.version><!--阿里nacos集成springboot客户端-->
+    <ibm.mq.version>9.2.4.0</ibm.mq.version><!--elasticsearch7搜索中间件-->
+    <imgscalr-lib.version>4.2</imgscalr-lib.version><!--elasticsearch6搜索中间件-->
+    <itext-asian.version>5.2.0</itext-asian.version><!--Java读写Excel、Word-->
+    <itextpdf.version>5.5.13.1</itextpdf.version><!--Java读写Excel、Word-->
+    <jackson.version>2.13.3</jackson.version><!--sql打印日志-->
+    <jaudiotagger.version>2.0.3</jaudiotagger.version><!--smart-docj接口文档生成-->
+    <java.version>1.8</java.version><!--openapi-ui接口文档生成-->
+    <javax.mail.version>1.4.7</javax.mail.version><!--swagger2在线接口文档生成-->
+    <jedis.version>3.3.0</jedis.version><!--swagger2在线接口文档生成-->
+    <jmeter.version>5.5</jmeter.version><!--swagger2在线接口文档生成-->
+    <jsch.version>0.1.55</jsch.version><!--swagger集成bootstrap风格-->
+    <jsoup.version>1.12.1</jsoup.version><!--openOffice-->
+    <junit-platform-launcher.version>1.7.1</junit-platform-launcher.version><!--java解析xml标签-->
+    <lock4j.version>2.2.2</lock4j.version><!--java读写docx-->
+    <maven.compiler.encoding>${project.build.sourceEncoding}
+    </maven.compiler.encoding><!--java读写pdf-->
+    <maven.compiler.source>${java.version}</maven.compiler.source><!--java读写pdf-->
+    <maven.compiler.target>${java.version}</maven.compiler.target><!--apache的HTTP连接工具-->
+    <metadata-extractor.version>2.18.0
+    </metadata-extractor.version><!--apache的FTP连接工具-->
+    <mongo-java-driver.version>3.10.2</mongo-java-driver.version><!--apache的压缩包工具-->
+    <mybatis-plus-generator.version>3.5.3</mybatis-plus-generator.version><!--apache的bean操作工具-->
+    <mybatis-plus.version>3.4.3.4</mybatis-plus.version><!-- java实现SSH传输-->
+    <mysql.version>5.1.48</mysql.version><!-- java发送邮件-->
+    <nacos-cloud.version>0.9.0.RELEASE</nacos-cloud.version>
+    <nacos-spring-boot.version>0.2.11</nacos-spring-boot.version><!--谷歌二维码生成工具-->
+    <nacos.version>2.1.0</nacos.version><!--JAVA汉字拼音操作库-pinyin4j-->
+    <netty-all.version>5.0.0.Alpha2</netty-all.version><!--JAVA汉字拼音操作库-TinyPinyin-->
+    <objenesis.version>2.6</objenesis.version><!--Spring中使用aop-->
+    <okhttp.version>5.0.0-alpha.10</okhttp.version><!--netty-->
+    <ooxml-schemas.version>1.4</ooxml-schemas.version><!--java读取图片的(尺寸、拍摄日期、标记)等EXIF信息-->
+    <openapi-ui.version>1.4.6</openapi-ui.version><!--txlcn分布式事务解决框架-->
+    <openoffice.version>4.1.2</openoffice.version><!--Guava是一种基于开源的Java库,谷歌很多项目使用它的很多核心库-->
+    <p6spy.version>3.9.1</p6spy.version><!--okhttp-->
+    <pinyin4j.version>2.5.1</pinyin4j.version><!--腾讯云sdk-->
+    <poi.version>4.1.2</poi.version><!--axis2请求webservice-->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding><!--cxf请求webservice-->
+    <project.reporting.outputEncoding>${project.build.sourceEncoding}
+    </project.reporting.outputEncoding><!--cxf请求webservice-->
+    <redission.version>3.17.4</redission.version><!--cxf请求webservice-->
+    <redisson.version>3.17.0</redisson.version><!--cxf请求webservice-->
+    <ribbon.version>2.7.18</ribbon.version><!--IBMMQ-->
+    <rxjava.version>1.3.8</rxjava.version><!--h2嵌入式数据库-->
+    <seata.version>1.5.2</seata.version><!--Junit测试模式JNDI环境-->
+    <simple-jnd.version>0.23.0</simple-jnd.version><!--tinyPNG压缩技术-->
+    <smart-doc.version>1.9.4</smart-doc.version><!-- Java 管理文档元数据的简单方法。-->
+    <spring-boot.version>2.7.5</spring-boot.version><!-- apache图片处理-->
+    <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version><!--缩略图处理-->
+    <spring-cloud.version>2021.0.4</spring-cloud.version> <!--Java 图像缩放库-->
+    <swagger-annotations.version>1.5.22</swagger-annotations.version><!--Java xml解析库-->
+    <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version><!--ribbon 负载均衡-->
+    <swagger-models.version>1.5.22</swagger-models.version>
+    <swagger2.version>2.9.2</swagger2.version>
+    <tencentcloudapi.version>3.1.177</tencentcloudapi.version><!--dtm分布式事务解决方案-->
+    <thumbnailator.version>0.4.17</thumbnailator.version>  <!-- apache 工具类-->
+    <tinyfy.version>1.7.0</tinyfy.version>  <!-- jmeter-->
+    <xercesImpl.version>2.12.0</xercesImpl.version>
+    <xstream.version>1.4.19</xstream.version>
+    <xxl-job.version>2.2.0</xxl-job.version>
+  </properties>
+
+
+  <!--仓库镜像-->
+  <!--<repositories>
+    <repository>
+      <id>public</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>http://maven.nuxeo.org/nexus/content/groups/public</url>
+    </repository>
+    <repository>
+      <id>public-snapshot</id>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+      <url>
+        http://maven.nuxeo.org/nexus/content/groups/public-snapshot
+      </url>
+    </repository>
+    <repository>
+      <id>public2</id>
+      <name>aliyun nexus</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>-->
+  <version>1.0</version>
+
+
+</project>
